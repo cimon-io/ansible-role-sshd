@@ -3,7 +3,7 @@ Port {{ sshd_port }}
 
 # Use these options to restrict which interfaces/protocols sshd will bind to
 {% for listen in sshd_listen_address %}
-ListenAddress {{ sshd_listen_address }}
+ListenAddress {{ listen }}
 {% endfor %}
 
 Protocol {{ sshd_protocol }}
