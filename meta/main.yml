@@ -1,6 +1,6 @@
 galaxy_info:
   author: Alexey Osipenko
-  description: configure sshd service
+  description: Configure sshd service
   company: Cimon.io
   license: MIT
   min_ansible_version: 2.0.0
