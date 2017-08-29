@@ -1,13 +1,14 @@
 ---
 - name: "Configure SSH daemon"
   template:
-    src: sshd_config.j2
-    dest: /etc/ssh/sshd_config
+    src: "etc/ssh/sshd_config.j2"
+    dest: "/etc/ssh/sshd_config"
     owner: root
     group: root
     mode: 0400
   notify:
     - restart sshd
   tags:
-    - ssh
+    - sshd
 
+- meta: flush_handlers
