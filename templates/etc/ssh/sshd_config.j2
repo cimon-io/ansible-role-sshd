@@ -1,94 +1,66 @@
 # {{ ansible_managed }}
 
-# What ports, IPs and protocols we listen for
 Port {{ sshd_port }}
-
-# Use these options to restrict which interfaces/protocols sshd will bind to
+AddressFamily {{ sshd_address_family }}
 {% for listen in sshd_listen_address %}
 ListenAddress {{ listen }}
 {% endfor %}
 
 Protocol {{ sshd_protocol }}
 
-# HostKeys for protocol version 2
-HostKey /etc/ssh/ssh_host_rsa_key
-HostKey /etc/ssh/ssh_host_dsa_key
-HostKey /etc/ssh/ssh_host_ecdsa_key
-HostKey /etc/ssh/ssh_host_ed25519_key
+{% for hostkey in sshd_host_key %}
+HostKey {{ hostkey }}
+{% endfor %}
 
-#Privilege Separation is turned on for security
-UsePrivilegeSeparation yes
+UsePrivilegeSeparation {{ sshd_use_privilege_separation }}
 
-# Lifetime and size of ephemeral version 1 server key
-KeyRegenerationInterval 3600
-ServerKeyBits 1024
+SyslogFacility {{ sshd_syslog_facility }}
+LogLevel {{ sshd_log_level }}
 
-# Logging
-SyslogFacility AUTH
-LogLevel INFO
+KeyRegenerationInterval {{ sshd_key_regeneration_interval }}
+ServerKeyBits {{ sshd_server_key_bits }}
 
-# Authentication:
-LoginGraceTime 120
+LoginGraceTime {{ sshd_login_grace_time }}
 PermitRootLogin {{ sshd_permit_root_login }}
 StrictModes {{ sshd_strict_mode }}
+MaxAuthTries {{ sshd_max_auth_tries }}
+MaxSessions {{ sshd_max_sessions }}
 
-RSAAuthentication yes
-PubkeyAuthentication yes
-#AuthorizedKeysFile	%h/.ssh/authorized_keys
+{% if sshd_deny_users|length > 0 %}
+DenyUsers {{ sshd_deny_users | join(' ') }}
+{% endif -%}
+{% if sshd_allow_users|length > 0 %}
+AllowUsers {{ sshd_allow_users | join(' ') }}
+{% endif -%}
 
-# Don't read the user's ~/.rhosts and ~/.shosts files
-IgnoreRhosts yes
+PubkeyAuthentication {{ sshd_pubkey_authentication }}
 
-# For this to work you will also need host keys in /etc/ssh_known_hosts
-RhostsRSAAuthentication no
+HostbasedAuthentication {{ sshd_hostbased_authentication }}
+IgnoreRhosts {{ sshd_ignore_rhosts }}
 
-# similar for protocol version 2
-HostbasedAuthentication no
-# Uncomment if you don't trust ~/.ssh/known_hosts for RhostsRSAAuthentication
-#IgnoreUserKnownHosts yes
-
-# To enable empty passwords, change to yes (NOT RECOMMENDED)
+PasswordAuthentication {{ sshd_password_authentication }}
 PermitEmptyPasswords {{ sshd_permit_empty_passwords }}
 
-# Change to yes to enable challenge-response passwords (beware issues with
-# some PAM modules and threads)
-ChallengeResponseAuthentication no
+ChallengeResponseAuthentication {{ sshd_challenge_response_authentication }}
 
-# Change to no to disable tunnelled clear text passwords
-PasswordAuthentication {{ sshd_password_authentication }}
+KerberosAuthentication {{ sshd_kerberos_authentication }}
+KerberosGetAFSToken {{ sshd_kerberos_get_AFS_token }}
+KerberosOrLocalPasswd {{ sshd_kerberos_or_local_passwd }}
+KerberosTicketCleanup {{ sshd_kerberos_ticket_cleanup }}
 
-# Kerberos options
-#KerberosAuthentication no
-#KerberosGetAFSToken no
-#KerberosOrLocalPasswd yes
-#KerberosTicketCleanup yes
+GSSAPIAuthentication {{ sshd_GSSAPI_authentication }}
+GSSAPICleanupCredentials {{ sshd_GSSAPI_cleanup_credentials }}
 
-# GSSAPI options
-#GSSAPIAuthentication no
-#GSSAPICleanupCredentials yes
+X11Forwarding {{ sshd_x11forwarding }}
+PrintMotd {{ sshd_print_motd }}
 
-X11Forwarding yes
-X11DisplayOffset 10
-PrintMotd no
-PrintLastLog yes
-TCPKeepAlive yes
-#UseLogin no
+PrintLastLog {{ sshd_print_last_log }}
+TCPKeepAlive {{ sshd_TCP_keepalive }}
 
-#MaxStartups 10:30:60
-#Banner /etc/issue.net
+Banner {{ sshd_banner }}
 
-# Allow client to pass locale environment variables
 AcceptEnv LANG LC_*
 
 Subsystem sftp /usr/lib/openssh/sftp-server
 
-# Set this to 'yes' to enable PAM authentication, account processing,
-# and session processing. If this is enabled, PAM authentication will
-# be allowed through the ChallengeResponseAuthentication and
-# PasswordAuthentication.  Depending on your PAM configuration,
-# PAM authentication via ChallengeResponseAuthentication may bypass
-# the setting of "PermitRootLogin without-password".
-# If you just want the PAM account and session checks to run without
-# PAM authentication, then enable this but set PasswordAuthentication
-# and ChallengeResponseAuthentication to 'no'.
 UsePAM yes

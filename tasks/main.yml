@@ -6,8 +6,14 @@
     owner: root
     group: root
     mode:  0400
-  notify:
-    - restart sshd
+  register: sshd_stat
+  notify: restart sshd
+  tags:
+    - sshd
+
+- name: "check configuration"
+  command: "sshd -t"
+  when: sshd_stat.changed
   tags:
     - sshd
 
