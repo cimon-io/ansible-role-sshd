@@ -11,7 +11,10 @@ galaxy_info:
     - name: Debian
       versions:
         - all
+
   galaxy_tags:
     - ssh
     - sshd
+    - system
+
 dependencies: []
