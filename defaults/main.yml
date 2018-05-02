@@ -31,7 +31,6 @@ sshd_permit_empty_passwords: "no"
 sshd_challenge_response_authentication: "no"
 
 sshd_kerberos_authentication: "no"
-sshd_kerberos_get_AFS_token: "no"
 sshd_kerberos_or_local_passwd: "yes"
 sshd_kerberos_ticket_cleanup: "yes"
 
