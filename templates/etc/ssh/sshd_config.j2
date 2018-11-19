@@ -12,13 +12,8 @@ Protocol {{ sshd_protocol }}
 HostKey {{ hostkey }}
 {% endfor %}
 
-UsePrivilegeSeparation {{ sshd_use_privilege_separation }}
-
 SyslogFacility {{ sshd_syslog_facility }}
 LogLevel {{ sshd_log_level }}
-
-KeyRegenerationInterval {{ sshd_key_regeneration_interval }}
-ServerKeyBits {{ sshd_server_key_bits }}
 
 LoginGraceTime {{ sshd_login_grace_time }}
 PermitRootLogin {{ sshd_permit_root_login }}
